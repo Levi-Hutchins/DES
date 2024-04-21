@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/levi_1/Library/CloudStorage/OneDrive-TheUniversityOfNewcastle/Bachelor of Computer Science/Year 3/Semester 1/COMP3260/Assignments/Assignment 2/DES",
+      "program": "/Users/levi_1/Library/CloudStorage/OneDrive-TheUniversityOfNewcastle/Bachelor of Computer Science/Year 3/Semester 1/COMP3260/Assignments/Assignment 2/DES/build/Debug/outDebug"
+    }
+  ]
+}
