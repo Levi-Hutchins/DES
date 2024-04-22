@@ -1,9 +1,9 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++20
 LDFLAGS=
-SOURCES=test.cpp
+SOURCES=main.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
-EXECUTABLE=test
+EXECUTABLE=main
 
 all: $(SOURCES) $(EXECUTABLE)
 
@@ -17,7 +17,7 @@ clean:
 	rm -rf *.o core $(EXECUTABLE)
 
 run: $(EXECUTABLE)
-	./$(EXECUTABLE)
+	./$(EXECUTABLE) sample_input/sample1.txt
 
 auto:
 	@$(MAKE) all
