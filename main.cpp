@@ -23,7 +23,7 @@ string* process_input(string file_location) {
     } else {
         cout << "Unable to open file" << endl;
     }
-    return values;
+    return values
 }
 
 int main(int argc, const char * argv[]) {
