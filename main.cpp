@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <string>
-
+#include <stdexcept>
 using namespace std;
 
 /**
@@ -14,24 +14,34 @@ using namespace std;
  *                 [3] K': Key with 1 bit flipped
  */
 string* process_input(string file_location) {
-    string* values = new string[4];
+     string* values = new string[4];
     ifstream file(file_location);
 
-    if (file.is_open()) {
-        for (int i = 0; i < 4 && getline(file, values[i]); ++i);
-        file.close();
-    } else {
-        cout << "Unable to open file" << endl;
+    if (!file.is_open()) {
+        delete[] values; 
+        throw runtime_error("Unable to open file: " + file_location);
     }
+
+    for (int i = 0; i < 4 && getline(file, values[i]); ++i);
+    file.close();
+
     return values;
 }
 
 int main(int argc, const char * argv[]) {
 
-    string* input_values = process_input(argv[1]);
-    for (int i = 0; i < 4; i++){
-        cout << input_values[i] << endl;
+    string* data = nullptr;
+    try {
+        data = process_input(argv[1]);
+        for (int i = 0; i < 4; i++) {
+            cout << data[i] << endl;
+        }
+    } catch (const std::exception& e) {
+        cerr << "Error: " << e.what() << endl;
+      
     }
+
+    delete[] data; 
     
     
     return 0;
