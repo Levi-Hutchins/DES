@@ -12,9 +12,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
+    - name: Change to pipeline directory
+      run: cd pipeline
+      working-directory: pipeline/
+
     - name: Pipeline Compile Test
-      run: make -f pipeline 
+      run: make -f pipeline.make all
+      working-directory: pipeline/
+    
     - name: Pipeline Run Test
-      run: make -f pipeline test
+      run: make -f pipeline.make test
+      working-directory: pipeline/
+    
     - name: Pipeline Clean
-      run: make -f pipeline clean
+      run: make -f pipeline.make clean
+      working-directory: pipeline/
