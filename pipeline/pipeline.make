@@ -2,7 +2,7 @@ CC=g++
 CFLAGS=-Wall -std=c++20
 LDFLAGS=
 TEST_EXECUTABLE=compile.test
-ALL_SOURCES=$(wildcard *.cpp)
+ALL_SOURCES=$(wildcard ../*.cpp)
 MAIN_SOURCES=$(filter-out compile.test.cpp,$(ALL_SOURCES))
 MAIN_OBJECTS=$(MAIN_SOURCES:.cpp=.o)
 TEST_OBJECT=$(TEST_EXECUTABLE).o
@@ -31,4 +31,3 @@ pipeline-test:
 	@$(MAKE) all
 	@$(MAKE) test
 	@$(MAKE) clean
-	
