@@ -12,5 +12,9 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: make auto
-      run: make auto
+    - name: Pipeline Compile Test
+      run: make -f pipeline 
+    - name: Pipeline Run Test
+      run: make -f pipeline test
+    - name: Pipeline Clean
+      run: make -f pipeline clean
