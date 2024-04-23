@@ -2,9 +2,8 @@ name: DES Build Pipeline
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "**" ]
 
 jobs:
   build:
