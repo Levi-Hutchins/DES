@@ -17,7 +17,7 @@ clean:
 	rm -rf *.o core $(EXECUTABLE)
 
 run: $(EXECUTABLE)
-	./$(EXECUTABLE) sample_input1/sample.txt
+	./$(EXECUTABLE) sample_input1/sample1.txt
 
 auto:
 	@$(MAKE) all
