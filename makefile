@@ -1,7 +1,7 @@
 CC=g++
 CFLAGS=-c -Wall -std=c++20
 LDFLAGS=
-SOURCES=main.cpp
+SOURCES=main.cpp DES.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main
 

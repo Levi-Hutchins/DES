@@ -1,3 +1,4 @@
+#include "DES.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -33,14 +34,16 @@ int main(int argc, const char * argv[]) {
     string* data = nullptr;
     try {
         data = process_input(argv[1]);
-        for (int i = 0; i < 4; i++) {
-            cout << data[i] << endl;
-        }
+        // for (int i = 0; i < 4; i++) {
+        //     cout << data[i] << endl;
+        // }
     } catch (const std::exception& e) {
         cerr << "Error: " << e.what() << endl;
       
     }
-
+    DES alg = DES();
+    alg.permutate_plaintext(data[0]);
+    //alg.permutate_key(data[2]);
     delete[] data; 
     
     
