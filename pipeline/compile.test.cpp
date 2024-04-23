@@ -1,7 +1,7 @@
 
 #include <iostream>
-#include "SBoxes.h"
-#include "Permutations.h"
+#include "../SBoxes.h"
+#include "../Permutations.h"
 int main() {
 
     cout << "******* Compile Test Passed *******" << endl;
