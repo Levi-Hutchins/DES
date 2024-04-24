@@ -43,9 +43,12 @@ int main(int argc, const char * argv[]) {
     }
     DES alg = DES();
     alg.permutate_plaintext(data[0]);
-    //alg.permutate_key(data[2]);
-    delete[] data; 
-    
+    string* keys = alg.permutate_key(data[2]);
+    cout << keys[0] << endl;
+    alg.left_shift(keys, 1);
+    //delete[] data; 
+    cout << keys[0] << endl;
+
     
     return 0;
 }

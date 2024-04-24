@@ -13,6 +13,8 @@ class DES{
 
         string permutate_plaintext(string plaintext);
 
+        void left_shift(string* c0_d0, int count);
+
 };
 
 

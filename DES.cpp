@@ -59,3 +59,20 @@ string DES::permutate_plaintext(string plaintext){
 
 
 }
+
+void DES::left_shift(string c0_d0[], int count){
+
+   string key1 = c0_d0[0];
+    char ind = key1.at(0);
+    cout << "Before Shift: " << key1 << endl;
+    for(int i = 0; i < key1.length()-1; i++){
+        key1[i] = key1[i+1];
+    }
+    key1[-1] = ind;
+    cout << "After Shift: " << key1 << endl;
+
+    c0_d0[0] = key1;
+
+
+
+}
