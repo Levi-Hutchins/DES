@@ -60,18 +60,21 @@ string DES::permutate_plaintext(string plaintext){
 
 }
 
+/**
+ * @param c0_d0: string array representing the two 28 bit keys
+ * @param count: int that determines the number of shifts  
+ */
 void DES::left_shift(string c0_d0[], int count){
+    for (int k = 0; k < 2; k++) {
+        string& key = c0_d0[k];
+        int len = key.length();
 
-   string key1 = c0_d0[0];
-    char ind = key1.at(0);
-    cout << "Before Shift: " << key1 << endl;
-    for(int i = 0; i < key1.length()-1; i++){
-        key1[i] = key1[i+1];
+        count = count % len;
+
+        if (count > 0) {
+            key = key.substr(count) + key.substr(0, count);
+        }
     }
-    key1[-1] = ind;
-    cout << "After Shift: " << key1 << endl;
-
-    c0_d0[0] = key1;
 
 
 
