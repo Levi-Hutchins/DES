@@ -31,7 +31,7 @@ class Permutations{
             46, 42, 50, 36, 29, 32
         };
 
-
+        // Initial Permutation
         static constexpr array<array<int, 8>, 8> IP = {{
             {58, 50, 42, 34, 26, 18, 10, 2},
             {60, 52, 44, 36, 28, 20, 12, 4},

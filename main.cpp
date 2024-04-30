@@ -42,15 +42,25 @@ int main(int argc, const char * argv[]) {
       
     }
     DES alg = DES();
+
+
     // PASSED
     //alg.permutate_plaintext(data[0]);
+    cout << "Plaintext: " <<  data[0] << endl;
+    string cipher = alg.encrypt(data[0], data[2]);
+    cout << "Cipher:    "<<  cipher << endl;
+    cout << "Decrypt:   "<<alg.decrypt(cipher, data[1]) << endl;
 
+    cout << " " << endl;
+
+    cout << " " << endl;
+    //cout <<alg.encrypt(data[0], data[2]) << endl;
     //PASSED
-    vector<string> keys = alg.permutate_key(data[2]);
-    cout << keys[0] << keys[1] << endl;
+    //vector<string> keys = alg.permutate_key(data[2]);
+    //cout << keys[0] << keys[1] << endl;
     // PASSED
     //alg.left_shift(keys, 2);
 
-    
+   
     return 0;
 }

@@ -1,4 +1,5 @@
 #include "DES.h"
+#include "SBoxes.h"
 #include "Permutations.h"
 #include <string>
 #include <vector>
@@ -51,6 +52,9 @@ string DES::permutate_plaintext(string plaintext){
         }
     }
 
+
+
+
     //string result(permutated_plaintext.begin(), permutated_plaintext.end());
     // cout << "Original:   "<< plaintext << endl;
     // cout << "Permutated: " << result << endl;
@@ -59,6 +63,14 @@ string DES::permutate_plaintext(string plaintext){
 
 
 
+}
+
+string DES::final_permutation(const string& data) {
+    string permuted(64, '0');
+    for(int i = 0; i < 64; i++) {
+        permuted[i] = data[Permutations::INVERSE_IP[i/8][i%8] - 1];
+    }
+    return permuted;
 }
 
 /**
@@ -87,18 +99,119 @@ string DES::applyPC2(const string& combined) {
 
 
 void DES::generate_subkeys() {
-    permutate_key((this->c0_d0.at(0)+this->c0_d0.at(1)));  
 
-    vector<string> roundKeys;
     string combinedKey;
 
     for (int i = 0; i < 16; i++) {
-        // Perform left shift according to the schedule
         left_shift(Permutations::shiftSchedule[i]);
 
-        // Combine and permute to create the round key
         combinedKey = c0_d0[0] + c0_d0[1];
         string roundKey = applyPC2(combinedKey);
-        roundKeys.push_back(roundKey);
+        this->roundKeys.push_back(roundKey);
     }
+}
+
+string DES::xor_strings(const string& a, const string& b) {
+    string result(a.size(), '0');
+    for (size_t i = 0; i < a.size(); i++) {
+        result[i] = (a[i] == b[i] ? '0' : '1');
+    }
+    return result;
+}
+
+string DES::feistel_function(const string& right, const string& roundKey) {
+    string expandedRight(48, '0');
+    for (int i = 0; i < 8; i++) {  
+        for (int j = 0; j < 6; j++) {
+            int idx = i * 6 + j;
+            expandedRight[idx] = right[Permutations::EXPANSION_PERMUTATION[i][j] - 1];
+        }
+    }
+
+    string result = xor_strings(expandedRight, roundKey);
+
+    string sBoxOutput = sBox_substitution(result);
+
+    string output(32, '0');
+    for (int i = 0; i < 4; i++) { 
+        for (int j = 0; j < 8; j++) {
+            int idx = i * 8 + j;
+            output[idx] = sBoxOutput[Permutations::PERMUTATION_FUNCTION[i][j] - 1];
+        }
+    }
+
+    return output;
+}
+
+
+string DES::sBox_substitution(const string &input) {
+    string output;   
+    int s_box_value = 0;
+
+    
+    for (int i = 0; i < 8; i++) {
+        int index = i * 6;
+        string six_bit_segment = input.substr(index, 6);
+
+        int row = 2 * (six_bit_segment[0] - '0') + (six_bit_segment[5] - '0');
+        int col = 8 * (six_bit_segment[1] - '0') + 4 * (six_bit_segment[2] - '0') +
+                  2 * (six_bit_segment[3] - '0') + (six_bit_segment[4] - '0');
+
+        if(i == 0){ s_box_value = SBoxes::S1[row][col];}
+        if(i == 1){ s_box_value = SBoxes::S2[row][col];}
+        if(i == 2){ s_box_value = SBoxes::S3[row][col];}
+        if(i == 3){ s_box_value = SBoxes::S4[row][col];}
+        if(i == 4){ s_box_value = SBoxes::S5[row][col];}
+        if(i == 5){ s_box_value = SBoxes::S6[row][col];}
+        if(i == 6){ s_box_value = SBoxes::S7[row][col];}
+        if(i == 7){ s_box_value = SBoxes::S8[row][col];}
+
+
+
+        string four_bit_output = bitset<4>(s_box_value).to_string();
+        output.append(four_bit_output);
+    }
+    return output;
+}
+
+string DES::encrypt(const string& plaintext, const string& key) {
+    permutate_key(key);
+    generate_subkeys();
+
+    string initialPermutation = permutate_plaintext(plaintext);
+    string left = initialPermutation.substr(0, 32);
+    string right = initialPermutation.substr(32, 32);
+
+    for (int i = 0; i < 16; i++) {
+        string nextRight = left;
+        left = right;
+        right = xor_strings(nextRight, feistel_function(right, this->roundKeys[i]));
+    }
+
+    string finalPermutation = final_permutation(right + left); 
+
+    return finalPermutation;
+}
+
+string DES::decrypt(const string& ciphertext, const string& key) {
+
+    permutate_key(key);
+    generate_subkeys();
+
+   
+    string initialPermutation = permutate_plaintext(ciphertext);
+    string left = initialPermutation.substr(0, 32);
+    string right = initialPermutation.substr(32, 32);
+
+    
+    for (int i = 15; i >= 0; i--) {
+        string nextRight = left;
+        left = right;
+        right = xor_strings(nextRight, feistel_function(right, roundKeys[i]));
+    }
+
+    
+    string finalPermutation = final_permutation(left + right);
+
+    return finalPermutation;
 }
