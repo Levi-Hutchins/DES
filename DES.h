@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #ifndef DES_H
 #define DES_H
 using namespace std;
@@ -9,11 +10,22 @@ class DES{
 
         DES();
 
-        string* permutate_key(string key);
+        vector<string> permutate_key(string key);
 
         string permutate_plaintext(string plaintext);
 
-        void left_shift(string* c0_d0, int count);
+        string applyPC2(const string& combined);
+
+
+        void left_shift(int count);
+
+        void generate_subkeys();
+
+
+    private:
+        vector<string> c0_d0;
+
+
 
 };
 

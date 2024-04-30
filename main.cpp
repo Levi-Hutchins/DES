@@ -46,7 +46,8 @@ int main(int argc, const char * argv[]) {
     //alg.permutate_plaintext(data[0]);
 
     //PASSED
-    //string* keys = alg.permutate_key(data[2]);
+    vector<string> keys = alg.permutate_key(data[2]);
+    cout << keys[0] << keys[1] << endl;
     // PASSED
     //alg.left_shift(keys, 2);
 

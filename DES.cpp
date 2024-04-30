@@ -7,11 +7,10 @@
 using namespace std;
 
 DES::DES(){
-
 }
 // TODO: function documentation
-string* DES::permutate_key(string key){
-    string* c0_d0 = new string[2];
+vector<string> DES::permutate_key(string key){
+    //string* c0_d0 = new string[2];
 
     // Go through row and column of permutation table get that index in the key
     // and append to the new vector. Account for position 0 bias
@@ -22,13 +21,15 @@ string* DES::permutate_key(string key){
         }
     }
 
+    // Position 0 = c0
+    this->c0_d0.push_back(permutedKey.substr(0,28));
 
-    c0_d0[0] = permutedKey.substr(0,28);
-    c0_d0[1] = permutedKey.substr(28,55);
+    // Position 1 = d0
+    this->c0_d0.push_back(permutedKey.substr(28,28));
+
+    return this->c0_d0;
 
 
-
-    return c0_d0;
 }
 
 
@@ -37,6 +38,7 @@ string* DES::permutate_key(string key){
  * @return permutated_result: string of plaintext after permutation
  */
 string DES::permutate_plaintext(string plaintext){
+    
     vector<char> permutated_plaintext(64);
 
     // Go through row and column of permutation table get that index in the plaintext
@@ -53,7 +55,6 @@ string DES::permutate_plaintext(string plaintext){
     // cout << "Original:   "<< plaintext << endl;
     // cout << "Permutated: " << result << endl;
     string permutated_result(permutated_plaintext.begin(), permutated_plaintext.end());
-    cout << permutated_result << endl;
     return permutated_result;
 
 
@@ -64,18 +65,40 @@ string DES::permutate_plaintext(string plaintext){
  * @param c0_d0: string array representing the two 28 bit keys
  * @param count: int that determines the number of shifts  
  */
-void DES::left_shift(string c0_d0[], int count){
+void DES::left_shift(int count){
     for (int k = 0; k < 2; k++) {
-        string& key = c0_d0[k];
-        int len = key.length();
-
-        count = count % len;
-
-        if (count > 0) {
-            key = key.substr(count) + key.substr(0, count);
+        string &half = c0_d0[k];  
+        string temp = half;      
+        
+        for (size_t i = 0; i < half.size(); i++) {
+            half[i] = temp[(i + count) % half.size()];
         }
+    
     }
+}
+
+string DES::applyPC2(const string& combined) {
+    string roundKey(48, '0');
+    for (int i = 0; i < 48; i++) {
+        roundKey[i] = combined[Permutations::PC2[i] - 1];
+    }
+    return roundKey;
+}
 
 
+void DES::generate_subkeys() {
+    permutate_key((this->c0_d0.at(0)+this->c0_d0.at(1)));  
 
+    vector<string> roundKeys;
+    string combinedKey;
+
+    for (int i = 0; i < 16; i++) {
+        // Perform left shift according to the schedule
+        left_shift(Permutations::shiftSchedule[i]);
+
+        // Combine and permute to create the round key
+        combinedKey = c0_d0[0] + c0_d0[1];
+        string roundKey = applyPC2(combinedKey);
+        roundKeys.push_back(roundKey);
+    }
 }
