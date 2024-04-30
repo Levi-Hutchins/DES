@@ -5,6 +5,7 @@
 #include <vector>
 #include <cstring> 
 #include <iostream>
+#include <bitset>
 using namespace std;
 
 DES::DES(){
