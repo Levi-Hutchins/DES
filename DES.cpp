@@ -23,6 +23,7 @@ vector<string> DES::permutate_key(string key){
         }
     }
 
+    this->c0_d0.clear();
     // Position 0 = c0
     this->c0_d0.push_back(permutedKey.substr(0,28));
 
@@ -212,7 +213,7 @@ string DES::decrypt(const string& ciphertext, const string& key) {
     }
 
     
-    string finalPermutation = final_permutation(left + right);
+    string finalPermutation = final_permutation(right + left);
 
     return finalPermutation;
 }
