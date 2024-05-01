@@ -10,9 +10,10 @@ using namespace std;
 
 DES::DES(){
 }
-// TODO: function documentation
-vector<string> DES::permutate_key(string key){
-    //string* c0_d0 = new string[2];
+/**
+ * @param key: Plaintext key from file
+ * @return c0_d0: 28 bit split key c0_d0[0] and [1]
+ */vector<string> DES::permutate_key(string key){
 
     // Go through row and column of permutation table get that index in the key
     // and append to the new vector. Account for position 0 bias
@@ -22,19 +23,15 @@ vector<string> DES::permutate_key(string key){
             permutedKey += key[pos - 1];  
         }
     }
-
+    // Ensure it is empty before pushing back (decryption)
     this->c0_d0.clear();
     // Position 0 = c0
     this->c0_d0.push_back(permutedKey.substr(0,28));
-
     // Position 1 = d0
     this->c0_d0.push_back(permutedKey.substr(28,28));
 
     return this->c0_d0;
-
-
 }
-
 
 /**
  * @param plaintext: string that is retrieved from the input file 
@@ -53,20 +50,15 @@ string DES::permutate_plaintext(string plaintext){
             permutated_plaintext[i * 8 + j] = plaintext[Permutations::IP[i][j]-1];
         }
     }
-
-
-
-
-    //string result(permutated_plaintext.begin(), permutated_plaintext.end());
-    // cout << "Original:   "<< plaintext << endl;
-    // cout << "Permutated: " << result << endl;
+    // Join the permutated characters into new permutated plaintext
     string permutated_result(permutated_plaintext.begin(), permutated_plaintext.end());
     return permutated_result;
-
-
-
 }
 
+/**
+ * @param : 
+ * @return :
+ */
 string DES::final_permutation(const string& data) {
     string permuted(64, '0');
     for(int i = 0; i < 64; i++) {
@@ -91,6 +83,10 @@ void DES::left_shift(int count){
     }
 }
 
+/**
+ * @param : 
+ * @return :
+ */
 string DES::applyPC2(const string& combined) {
     string roundKey(48, '0');
     for (int i = 0; i < 48; i++) {
@@ -99,7 +95,10 @@ string DES::applyPC2(const string& combined) {
     return roundKey;
 }
 
-
+/**
+ * @param : 
+ * @return :
+ */
 void DES::generate_subkeys() {
 
     string combinedKey;
@@ -113,6 +112,10 @@ void DES::generate_subkeys() {
     }
 }
 
+/**
+ * @param : 
+ * @return :
+ */
 string DES::xor_strings(const string& a, const string& b) {
     string result(a.size(), '0');
     for (size_t i = 0; i < a.size(); i++) {
@@ -121,6 +124,10 @@ string DES::xor_strings(const string& a, const string& b) {
     return result;
 }
 
+/**
+ * @param : 
+ * @return :
+ */
 string DES::feistel_function(const string& right, const string& roundKey) {
     string expandedRight(48, '0');
     for (int i = 0; i < 8; i++) {  
@@ -145,7 +152,10 @@ string DES::feistel_function(const string& right, const string& roundKey) {
     return output;
 }
 
-
+/**
+ * @param : 
+ * @return :
+ */
 string DES::sBox_substitution(const string &input) {
     string output;   
     int s_box_value = 0;
@@ -176,6 +186,10 @@ string DES::sBox_substitution(const string &input) {
     return output;
 }
 
+/**
+ * @param : 
+ * @return :
+ */
 string DES::encrypt(const string& plaintext, const string& key) {
     permutate_key(key);
     generate_subkeys();
@@ -194,7 +208,10 @@ string DES::encrypt(const string& plaintext, const string& key) {
 
     return finalPermutation;
 }
-
+/**
+ * @param : 
+ * @return :
+ */
 string DES::decrypt(const string& ciphertext, const string& key) {
 
     permutate_key(key);
