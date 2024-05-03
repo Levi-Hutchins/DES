@@ -13,6 +13,7 @@ DES::DES(){
 /**
  * @param key: Plaintext key from file
  * @return c0_d0: 28 bit split key c0_d0[0] and [1]
+ * @desc: 
  */vector<string> DES::permutate_key(string key){
 
     // Go through row and column of permutation table get that index in the key
@@ -36,6 +37,7 @@ DES::DES(){
 /**
  * @param plaintext: string that is retrieved from the input file 
  * @return permutated_result: string of plaintext after permutation
+ * @desc: 
  */
 string DES::permutate_plaintext(string plaintext){
     
@@ -55,9 +57,12 @@ string DES::permutate_plaintext(string plaintext){
     return permutated_result;
 }
 
-/**
- * @param : 
- * @return :
+/** 
+ * @param data The data to be permuted.
+ * @return The final permuted data string.
+ * @description This method performs the final permutation step as specified 
+ *               by the DES algorithm. It takes the input data and applies the 
+ *               inverse initial permutation (IP^-1) to reorder the bits. 
  */
 string DES::final_permutation(const string& data) {
     string permuted(64, '0');
@@ -69,7 +74,8 @@ string DES::final_permutation(const string& data) {
 
 /**
  * @param c0_d0: string array representing the two 28 bit keys
- * @param count: int that determines the number of shifts  
+ * @param count: int that determines the number of shifts (determined from shift schedule)
+ * @desc:  Performs left shift count amount of times 
  */
 void DES::left_shift(int count){
     for (int k = 0; k < 2; k++) {
@@ -84,8 +90,10 @@ void DES::left_shift(int count){
 }
 
 /**
- * @param : 
- * @return :
+ * @param combined The combined key halves.
+ * @return The resulting round key after permutation.
+ * @description This method applies the PC2 permutation table to the combined 
+ *               key halves, which have undergone left shifts. 
  */
 string DES::applyPC2(const string& combined) {
     string roundKey(48, '0');
@@ -96,8 +104,10 @@ string DES::applyPC2(const string& combined) {
 }
 
 /**
- * @param : 
- * @return :
+ * @return None.
+ * @description This method generates all 16 subkeys required for the DES rounds. 
+ *               It iterates through the key schedule, performing left shifts on 
+ *               the key halves according to the shift schedule specified by DES. 
  */
 void DES::generate_subkeys() {
 
@@ -112,9 +122,12 @@ void DES::generate_subkeys() {
     }
 }
 
-/**
- * @param : 
- * @return :
+/** 
+ * @param a The first binary string.
+ * @param b The second binary string.
+ * @return The result of the XOR operation between the input strings.
+ * @description This function takes two binary strings as input and performs the 
+ *               bitwise XOR operation between them. 
  */
 string DES::xor_strings(const string& a, const string& b) {
     string result(a.size(), '0');
@@ -125,8 +138,13 @@ string DES::xor_strings(const string& a, const string& b) {
 }
 
 /**
- * @param : 
- * @return :
+ * @param right The right half of the plaintext or ciphertext.
+ * @param roundKey The round key used for encryption or decryption.
+ * @return The result of the Feistel function, which includes expansion permutation,
+ *         XOR operation with the round key, S-box substitution, and permutation.
+ * @description The Feistel function is a crucial component of the DES algorithm. 
+ *               It operates on the right half of the plaintext during encryption 
+ *               or ciphertext during decryption. 
  */
 string DES::feistel_function(const string& right, const string& roundKey) {
     string expandedRight(48, '0');
@@ -153,8 +171,12 @@ string DES::feistel_function(const string& right, const string& roundKey) {
 }
 
 /**
- * @param : 
- * @return :
+ * @param input The input string to be substituted using S-boxes.
+ * @return The output string after S-box substitution.
+ * @description This method performs S-box substitution on the input string using 
+ *               the predefined S-boxes 1 through 8. It divides the input string 
+ *               into 6-bit segments and computes the corresponding row and column 
+ *               indices for each segment. 
  */
 string DES::sBox_substitution(const string &input) {
     string output;   
@@ -186,9 +208,13 @@ string DES::sBox_substitution(const string &input) {
     return output;
 }
 
-/**
- * @param : 
- * @return :
+/** 
+ * @param plaintext The plaintext string to be encrypted.
+ * @param key The encryption key string.
+ * @return The ciphertext string resulting from the encryption process.
+ * @description This method encrypts the plaintext using the Data Encryption Standard (DES) 
+ *               algorithm with the provided key. It begins by permutating the key and 
+ *               generating all 16 subkeys required for the encryption rounds.
  */
 string DES::encrypt(const string& plaintext, const string& key) {
     permutate_key(key);
@@ -209,8 +235,13 @@ string DES::encrypt(const string& plaintext, const string& key) {
     return finalPermutation;
 }
 /**
- * @param : 
- * @return :
+ * @param ciphertext The ciphertext string to be decrypted.
+ * @param key The decryption key string.
+ * @return The plaintext string resulting from the decryption process.
+ * @description This method decrypts the ciphertext using the Data Encryption Standard (DES) 
+ *               algorithm with the provided key. It begins by permutating the key and 
+ *               generating all 16 subkeys required for the decryption rounds. The ciphertext 
+ *               undergoes initial permutation and is split into left and right halves. 
  */
 string DES::decrypt(const string& ciphertext, const string& key) {
 
