@@ -4,6 +4,8 @@ LDFLAGS=
 SOURCES=main.cpp DES.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main
+TEST_OBJECTS=$(TEST_SOURCES:.cpp=.o)  # Convert test source files to object files
+TEST_EXECUTABLE=test
 
 all: $(SOURCES) $(EXECUTABLE)
 
@@ -13,8 +15,12 @@ $(EXECUTABLE): $(OBJECTS)
 %.o : %.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(TEST_EXECUTABLE): $(TEST_OBJECTS) $(OBJECTS)
+	$(CC) $(LDFLAGS) $(TEST_OBJECTS) $(OBJECTS) -o $@
+
+
 clean:
-	rm -rf *.o core $(EXECUTABLE)
+	rm -rf *.o core $(EXECUTABLE) $(TEST_EXECUTABLE) test/*.o
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE) sample_input/sample1.txt
@@ -23,4 +29,3 @@ auto:
 	@$(MAKE) all
 	@$(MAKE) run
 	@$(MAKE) clean
-	
