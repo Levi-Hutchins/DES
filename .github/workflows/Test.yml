@@ -1,0 +1,22 @@
+name: DES Test Pipeline
+
+on:
+  push:
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: configure
+      run: ./configure
+    - name: Change to Test Directory 
+      run: cd ./test
+    - name: Compile & Run Tests
+      run: make run
+    - name: Clean Up  
+      run: make clean
