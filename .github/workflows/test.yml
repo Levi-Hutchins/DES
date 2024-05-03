@@ -12,9 +12,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Change to Test Directory 
-      run: cd ./test
+
     - name: Compile & Run Tests
-      run: make run
+      run: |
+        cd ./test  
+        make run   
+
     - name: Clean Up  
-      run: make clean
+      run: |
+        cd ./test  
+        make clean 
