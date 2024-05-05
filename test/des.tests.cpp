@@ -38,5 +38,6 @@ void des0_encrypt_decrypt() {
 
 int main() {
     des0_encrypt_decrypt();
+    
     return 0;
 }
