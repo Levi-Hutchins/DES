@@ -20,3 +20,4 @@ clean:
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
+

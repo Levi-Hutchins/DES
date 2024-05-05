@@ -33,12 +33,17 @@ class DES{
 
         string final_permutation(const string& data);
 
+        void count_bit_changes(const string& plaintext_after_round);
+
 
 
 
     private:
+        vector<int> bit_differences;
         vector<string> c0_d0;
         vector<string> roundKeys;
+        string original_plaintext;
+        string original_key;
 
 
 

@@ -5,7 +5,7 @@ SOURCES=main.cpp DES.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=main
 TEST_OBJECTS=$(TEST_SOURCES:.cpp=.o)  # Convert test source files to object files
-TEST_EXECUTABLE=test
+
 
 all: $(SOURCES) $(EXECUTABLE)
 
@@ -20,7 +20,7 @@ $(TEST_EXECUTABLE): $(TEST_OBJECTS) $(OBJECTS)
 
 
 clean:
-	rm -rf *.o core $(EXECUTABLE) $(TEST_EXECUTABLE) test/*.o
+	rm -rf *.o core $(EXECUTABLE) test/*.o
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE) sample_input/sample1.txt

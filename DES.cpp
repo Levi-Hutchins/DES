@@ -208,6 +208,24 @@ string DES::sBox_substitution(const string &input) {
     return output;
 }
 
+void DES::count_bit_changes(const string& new_bits) {
+    static string last_bits;  // Keep track of the bits from the last round
+    if (last_bits.empty()) {
+        last_bits = new_bits;  // Initialize with the first set of bits
+        return;
+    }
+
+    int count = 0;
+    for (size_t i = 0; i < new_bits.size() && i < last_bits.size(); ++i) {
+        if (new_bits[i] != last_bits[i]) count++;
+    }
+
+    cout << "Bit changes from last round: " << count << endl;
+    last_bits = new_bits;  // Update last_bits for the next round comparison
+}
+
+
+
 /** 
  * @param plaintext The plaintext string to be encrypted.
  * @param key The encryption key string.
@@ -217,6 +235,8 @@ string DES::sBox_substitution(const string &input) {
  *               generating all 16 subkeys required for the encryption rounds.
  */
 string DES::encrypt(const string& plaintext, const string& key) {
+    this->original_plaintext = plaintext;
+    this->original_key = key;
     permutate_key(key);
     generate_subkeys();
 
@@ -228,6 +248,8 @@ string DES::encrypt(const string& plaintext, const string& key) {
         string nextRight = left;
         left = right;
         right = xor_strings(nextRight, feistel_function(right, this->roundKeys[i]));
+
+        count_bit_changes(right + left);
     }
 
     string finalPermutation = final_permutation(right + left); 
