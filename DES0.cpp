@@ -1,4 +1,4 @@
-#include "DES.h"
+#include "DES0.h"
 #include "SBoxes.h"
 #include "Permutations.h"
 #include <string>
@@ -8,13 +8,13 @@
 #include <bitset>
 using namespace std;
 
-DES::DES(){
+DES0::DES0(){
 }
 /**
  * @param key: Plaintext key from file
  * @return c0_d0: 28 bit split key c0_d0[0] and [1]
  * @desc: 
- */vector<string> DES::permutate_key(string key){
+ */vector<string> DES0::permutate_key(string key){
 
     // Go through row and column of permutation table get that index in the key
     // and append to the new vector. Account for position 0 bias
@@ -39,7 +39,7 @@ DES::DES(){
  * @return permutated_result: string of plaintext after permutation
  * @desc: 
  */
-string DES::permutate_plaintext(string plaintext){
+string DES0::permutate_plaintext(string plaintext){
     
     vector<char> permutated_plaintext(64);
 
@@ -64,7 +64,7 @@ string DES::permutate_plaintext(string plaintext){
  *               by the DES algorithm. It takes the input data and applies the 
  *               inverse initial permutation (IP^-1) to reorder the bits. 
  */
-string DES::final_permutation(const string& data) {
+string DES0::final_permutation(const string& data) {
     string permuted(64, '0');
     for(int i = 0; i < 64; i++) {
         permuted[i] = data[Permutations::INVERSE_IP[i/8][i%8] - 1];
@@ -77,7 +77,7 @@ string DES::final_permutation(const string& data) {
  * @param count: int that determines the number of shifts (determined from shift schedule)
  * @desc:  Performs left shift count amount of times 
  */
-void DES::left_shift(int count){
+void DES0::left_shift(int count){
     for (int k = 0; k < 2; k++) {
         string &half = c0_d0[k];  
         string temp = half;      
@@ -95,7 +95,7 @@ void DES::left_shift(int count){
  * @description This method applies the PC2 permutation table to the combined 
  *               key halves, which have undergone left shifts. 
  */
-string DES::applyPC2(const string& combined) {
+string DES0::applyPC2(const string& combined) {
     string roundKey(48, '0');
     for (int i = 0; i < 48; i++) {
         roundKey[i] = combined[Permutations::PC2[i] - 1];
@@ -109,7 +109,7 @@ string DES::applyPC2(const string& combined) {
  *               It iterates through the key schedule, performing left shifts on 
  *               the key halves according to the shift schedule specified by DES. 
  */
-void DES::generate_subkeys() {
+void DES0::generate_subkeys() {
 
     string combinedKey;
 
@@ -129,7 +129,7 @@ void DES::generate_subkeys() {
  * @description This function takes two binary strings as input and performs the 
  *               bitwise XOR operation between them. 
  */
-string DES::xor_strings(const string& a, const string& b) {
+string DES0::xor_strings(const string& a, const string& b) {
     string result(a.size(), '0');
     for (size_t i = 0; i < a.size(); i++) {
         result[i] = (a[i] == b[i] ? '0' : '1');
@@ -146,7 +146,7 @@ string DES::xor_strings(const string& a, const string& b) {
  *               It operates on the right half of the plaintext during encryption 
  *               or ciphertext during decryption. 
  */
-string DES::feistel_function(const string& right, const string& roundKey) {
+string DES0::feistel_function(const string& right, const string& roundKey) {
     string expandedRight(48, '0');
     for (int i = 0; i < 8; i++) {  
         for (int j = 0; j < 6; j++) {
@@ -178,7 +178,7 @@ string DES::feistel_function(const string& right, const string& roundKey) {
  *               into 6-bit segments and computes the corresponding row and column 
  *               indices for each segment. 
  */
-string DES::sBox_substitution(const string &input) {
+string DES0::sBox_substitution(const string &input) {
     string output;   
     int s_box_value = 0;
 
@@ -208,7 +208,7 @@ string DES::sBox_substitution(const string &input) {
     return output;
 }
 
-void DES::count_bit_changes(const string& new_bits) {
+void DES0::count_bit_changes(const string& new_bits) {
     static string last_bits;  // Keep track of the bits from the last round
     if (last_bits.empty()) {
         last_bits = new_bits;  // Initialize with the first set of bits
@@ -234,7 +234,7 @@ void DES::count_bit_changes(const string& new_bits) {
  *               algorithm with the provided key. It begins by permutating the key and 
  *               generating all 16 subkeys required for the encryption rounds.
  */
-string DES::encrypt(const string& plaintext, const string& key) {
+string DES0::encrypt(const string& plaintext, const string& key) {
     this->original_plaintext = plaintext;
     this->original_key = key;
     permutate_key(key);
@@ -265,7 +265,7 @@ string DES::encrypt(const string& plaintext, const string& key) {
  *               generating all 16 subkeys required for the decryption rounds. The ciphertext 
  *               undergoes initial permutation and is split into left and right halves. 
  */
-string DES::decrypt(const string& ciphertext, const string& key) {
+string DES0::decrypt(const string& ciphertext, const string& key) {
 
     permutate_key(key);
     generate_subkeys();

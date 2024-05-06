@@ -1,4 +1,4 @@
-#include "DES.h"
+#include "DES0.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -41,7 +41,7 @@ int main(int argc, const char * argv[]) {
         cerr << "Error: " << e.what() << endl;
       
     }
-    DES alg = DES();
+    DES0 alg = DES0();
 
 
     // PASSED

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../DES.h"
+#include "../DES0.h"
 const char* GREEN_COLOR_CODE = "\033[1;32m";
 const char* RED_COLOR_CODE = "\033[1;31m";
 const char* RESET_COLOR_CODE = "\033[0m";
@@ -16,7 +16,7 @@ bool compare_strings(const std::string& expected, const std::string& actual) {
 }
 
 void des0_encrypt_decrypt() {
-    DES des = DES();
+    DES0 des = DES0();
 
     // Plaintext
     std::string plaintext1 = "1101011000110101001001111001010110100010110001101110010100011101";
