@@ -208,23 +208,21 @@ string DES0::sBox_substitution(const string &input) {
     return output;
 }
 
-void DES0::count_bit_changes(const string& new_bits) {
-    static string last_bits;  // Keep track of the bits from the last round
-    if (last_bits.empty()) {
-        last_bits = new_bits;  // Initialize with the first set of bits
-        return;
-    }
+void DES0::count_bit_changes(const string& pt, const string& pt_prime) {
+        if (pt.size() != pt_prime.size()) {
+            std::cerr << "Error: Plaintext sizes do not match." << std::endl;
+            return;
+        }
 
-    int count = 0;
-    for (size_t i = 0; i < new_bits.size() && i < last_bits.size(); ++i) {
-        if (new_bits[i] != last_bits[i]) count++;
-    }
+        int count = 0;
+        for (size_t i = 0; i < pt.size(); ++i) {
+            if (pt[i] != pt_prime[i]) count++;
+        }
 
-    cout << "Bit changes from last round: " << count << endl;
-    last_bits = new_bits;  // Update last_bits for the next round comparison
+        std::cout << " Bit changes between plaintext and plaintext prime: " << count << std::endl;
+        this->bit_differences.push_back(count);
+
 }
-
-
 
 /** 
  * @param plaintext The plaintext string to be encrypted.
@@ -234,25 +232,31 @@ void DES0::count_bit_changes(const string& new_bits) {
  *               algorithm with the provided key. It begins by permutating the key and 
  *               generating all 16 subkeys required for the encryption rounds.
  */
-string DES0::encrypt(const string& plaintext, const string& key) {
-    this->original_plaintext = plaintext;
-    this->original_key = key;
+string DES0::encrypt(const string& pt, const string& pt_prime, const string& key) {
     permutate_key(key);
     generate_subkeys();
 
-    string initialPermutation = permutate_plaintext(plaintext);
-    string left = initialPermutation.substr(0, 32);
-    string right = initialPermutation.substr(32, 32);
+    string pt_inital_perm = permutate_plaintext(pt);
+    string pt_left = pt_inital_perm.substr(0, 32);
+    string pt_right = pt_inital_perm.substr(32, 32);
+
+    string pt_prime_initial_perm = permutate_plaintext(pt_prime);
+    string pt_prime_left = pt_prime_initial_perm.substr(0, 32);
+    string pt_prime_right = pt_prime_initial_perm.substr(32, 32);
 
     for (int i = 0; i < 16; i++) {
-        string nextRight = left;
-        left = right;
-        right = xor_strings(nextRight, feistel_function(right, this->roundKeys[i]));
+        string nextRight = pt_left;
+        pt_left = pt_right;
+        pt_right = xor_strings(nextRight, feistel_function(pt_right, this->roundKeys[i]));
 
-        count_bit_changes(right + left);
+
+        string nextRight_PRIME = pt_prime_left;
+        pt_prime_left = pt_prime_right;
+        pt_prime_right = xor_strings(nextRight_PRIME, feistel_function(pt_prime_right, this->roundKeys[i]));
+        count_bit_changes((pt_right + pt_left), (pt_prime_right + pt_prime_left));
     }
 
-    string finalPermutation = final_permutation(right + left); 
+    string finalPermutation = final_permutation(pt_right + pt_left); 
 
     return finalPermutation;
 }
@@ -286,4 +290,8 @@ string DES0::decrypt(const string& ciphertext, const string& key) {
     string finalPermutation = final_permutation(right + left);
 
     return finalPermutation;
+}
+
+vector<int> DES0::get_bit_difference(){
+    return this->bit_differences;
 }

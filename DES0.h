@@ -10,30 +10,34 @@ class DES0{
 
         DES0();
 
-        virtual vector<string> permutate_key(string key);
 
-        virtual string permutate_plaintext(string plaintext);
+        vector<string> permutate_key(string key);
 
-        virtual string applyPC2(const string& combined);
+        string permutate_plaintext(string plaintext);
 
+        string applyPC2(const string& combined);
 
-        virtual void left_shift(int count);
+        void left_shift(int count);
 
-        virtual void generate_subkeys();
+        void generate_subkeys();
 
-        virtual string feistel_function(const string& right, const string& round_keys);
+        string feistel_function(const string& right, const string& round_keys);
 
-        virtual string sBox_substitution(const string &input);
+        string sBox_substitution(const string &input);
 
-        virtual string xor_strings(const string &a, const string &b);
+        string xor_strings(const string &a, const string &b);
 
-        virtual string encrypt(const string &plaintext, const string& key);
+        string encrypt(const string &plaintext, const string& plaintext_PRIME, const string& key);
 
-        virtual string decrypt(const string& ciphertext, const string& key);
+        string decrypt(const string& ciphertext, const string& key);
 
-        virtual string final_permutation(const string& data);
+        string final_permutation(const string& data);
 
-        virtual void count_bit_changes(const string& plaintext_after_round);
+        void count_bit_changes(const string& pt, const string& pt_prime);
+
+        vector<int> get_bit_difference();
+
+        
 
 
 
@@ -42,7 +46,8 @@ class DES0{
         vector<int> bit_differences;
         vector<string> c0_d0;
         vector<string> roundKeys;
-        string original_plaintext;
+        string encrypting_plaintext;
+        string encrypting_plaintext_PRIME;
         string original_key;
 
 
