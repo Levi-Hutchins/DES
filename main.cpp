@@ -66,7 +66,7 @@ void handle_outfile(const string* data){
 
     outfile << std::string(15 * 5, '-') << std::endl;
 
-    for(int i = 0; i < 15; i++){
+    for(int i = 0; i < 16; i++){
         outfile << std::setw(15) << i
                 << std::setw(15) << des0_bits.at(i)
                 << std::setw(15) << ""
