@@ -14,16 +14,16 @@ jobs:
     
     - name: Change to pipeline directory
       run: cd ../test
-      working-directory: pipeline/
+      working-directory: test/
 
     - name: Pipeline Compile Test
       run: make -f pipeline.make all
-      working-directory: pipeline/
+      working-directory: test/
     
     - name: Pipeline Run Test
       run: make -f pipeline.make test
-      working-directory: pipeline/
+      working-directory: test/
     
     - name: Pipeline Clean
       run: make -f pipeline.make clean
-      working-directory: pipeline/
+      working-directory: test/
