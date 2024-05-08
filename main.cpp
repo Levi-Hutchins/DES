@@ -1,4 +1,5 @@
 #include "DES0.h"
+#include "DES1.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -31,15 +32,28 @@ string* process_input(string file_location) {
 }
 
 void handle_outfile(const string* data){
+  
+    using std::chrono::high_resolution_clock;
+    using std::chrono::duration_cast;
+    using std::chrono::duration;
+    using std::chrono::milliseconds;
 
+    auto t1 = high_resolution_clock::now();
     DES0 des0;
-    // DES1 des1;
+    DES1 des1;
     // DES2 des2;
     // DES3 des3;
+    auto t2 = high_resolution_clock::now();
+    duration<double, std::milli> ms_double = t2 - t1;
+    std::string time = std::to_string(ms_double.count());
 
     string cipher = des0.encrypt(data[0], data[1], data[2]);
     vector<int> des0_bits = des0.get_bit_difference();
     string cipher_prime = des0.encrypt(data[1], data[0], data[2]);
+
+    string cipher1 = des1.encrypt(data[0], data[1], data[2]);
+    vector<int> des1_bits = des1.get_bit_difference();
+    string cipher_prime1 = des1.encrypt(data[1], data[0], data[2]);
 
 
 
@@ -49,7 +63,7 @@ void handle_outfile(const string* data){
     outfile << "Plaintext P': " << data[1] << endl;
     outfile << "Key K: " << data[2] << endl;
     outfile << "Key K': " << data[3] << endl;
-    outfile << "Total Running Time: " << endl;
+    outfile << "Total Running Time: " + time + "ms" <<endl;
     outfile << endl;
 
     outfile << "P and P' under K"<< endl;
@@ -69,7 +83,7 @@ void handle_outfile(const string* data){
     for(int i = 0; i < 16; i++){
         outfile << std::setw(15) << i
                 << std::setw(15) << des0_bits.at(i)
-                << std::setw(15) << ""
+                << std::setw(15) << des1_bits.at(i)
                 << std::setw(15) << "" << endl;
 
     }
@@ -94,19 +108,17 @@ int main(int argc, const char * argv[]) {
         cerr << "Error: " << e.what() << endl;
       
     }
-    DES0 alg = DES0();
+    DES1 alg = DES1();
 
 
     // PASSED
     //alg.permutate_plaintext(data[0]);
-    // cout << "Plaintext: " <<  data[0] << endl;
-    // string cipher = alg.encrypt(data[0], data[2]);
-    // cout << "Cipher:    "<<  cipher << endl;
-    // cout << "Decrypt:   "<<alg.decrypt(cipher, data[1]) << endl;
+    cout << "Plaintext: " <<  data[0] << endl;
+    string cipher = alg.encrypt(data[0], data[1], data[2]);
+    cout << "Cipher:    "<<  cipher << endl;
+    cout << "Decrypt:   "<<alg.decrypt(cipher, data[1]) << endl;
 
-    cout << " " << endl;
 
-    cout << " " << endl;
 
     handle_outfile(data);
     //cout <<alg.encrypt(data[0], data[2]) << endl;

@@ -1,7 +1,7 @@
 CXX=g++
 CXXFLAGS=-Wall -std=c++20
 LDFLAGS=
-SOURCES=../DES0.cpp des.tests.cpp
+SOURCES=../DES0.cpp ../DES1.cpp des.tests.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 EXECUTABLE=des_tests
 
@@ -20,4 +20,8 @@ clean:
 
 run: $(EXECUTABLE)
 	./$(EXECUTABLE)
+
+test:
+	@$(MAKE) run
+	@$(MAKE) clean
 

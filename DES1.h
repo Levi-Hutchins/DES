@@ -1,14 +1,14 @@
 #include <string>
 #include <vector>
-#ifndef DES0_H
-#define DES0_H
+#ifndef DES1_H
+#define DES1_H
 using namespace std;
 
-class DES0{
+class DES1{
 
     public:
 
-        DES0();
+        DES1();
 
 
         vector<string> permutate_key(string key);
@@ -21,11 +21,10 @@ class DES0{
 
         void generate_subkeys();
 
-        string feistel_function(const string& right, const string& round_keys);
+        string feistel_function(const string& right);
 
         string sBox_substitution(const string &input);
 
-        string xor_strings(const string &a, const string &b);
 
         string encrypt(const string &plaintext, const string& plaintext_PRIME, const string& key);
 
@@ -34,6 +33,8 @@ class DES0{
         string final_permutation(const string& data);
 
         void count_bit_changes(const string& pt, const string& pt_prime);
+
+        string xor_strings(const string& a, const string& b);
 
         vector<int> get_bit_difference();
 
@@ -46,6 +47,7 @@ class DES0{
         vector<int> bit_differences;
         vector<string> c0_d0;
         vector<string> roundKeys;
+
         string original_key;
 
 
