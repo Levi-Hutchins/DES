@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <chrono>
 #include <vector>
 #include <string>
 #include <stdexcept>
@@ -33,10 +34,10 @@ string* process_input(string file_location) {
 
 void handle_outfile(const string* data){
   
-    using std::chrono::high_resolution_clock;
-    using std::chrono::duration_cast;
-    using std::chrono::duration;
-    using std::chrono::milliseconds;
+    using chrono::high_resolution_clock;
+    using chrono::duration_cast;
+    using chrono::duration;
+    using chrono::milliseconds;
 
     auto t1 = high_resolution_clock::now();
     DES0 des0;
@@ -44,8 +45,8 @@ void handle_outfile(const string* data){
     // DES2 des2;
     // DES3 des3;
     auto t2 = high_resolution_clock::now();
-    duration<double, std::milli> ms_double = t2 - t1;
-    std::string time = std::to_string(ms_double.count());
+    duration<double, milli> ms_double = t2 - t1;
+    string time = to_string(ms_double.count());
 
     string cipher = des0.encrypt(data[0], data[1], data[2]);
     vector<int> des0_bits = des0.get_bit_difference();
