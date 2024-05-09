@@ -1,5 +1,6 @@
 #include "DES0.h"
 #include "DES1.h"
+#include "DES2.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -42,7 +43,7 @@ void handle_outfile(const string* data){
     auto t1 = high_resolution_clock::now();
     DES0 des0;
     DES1 des1;
-    // DES2 des2;
+    DES2 des2;
     // DES3 des3;
     auto t2 = high_resolution_clock::now();
     duration<double, milli> ms_double = t2 - t1;
@@ -54,7 +55,9 @@ void handle_outfile(const string* data){
 
     string cipher1 = des1.encrypt(data[0], data[1], data[2]);
     vector<int> des1_bits = des1.get_bit_difference();
-    string cipher_prime1 = des1.encrypt(data[1], data[0], data[2]);
+
+    string cipher2 = des2.encrypt(data[0], data[1], data[2]);
+    vector<int> des2_bits = des2.get_bit_difference();
 
 
 
@@ -85,14 +88,9 @@ void handle_outfile(const string* data){
         outfile << std::setw(15) << i
                 << std::setw(15) << des0_bits.at(i)
                 << std::setw(15) << des1_bits.at(i)
-                << std::setw(15) << "" << endl;
+                << std::setw(15) << des2_bits.at(i) << endl;
 
     }
-
-
- 
-
-
 
     outfile.close();
 }
@@ -102,18 +100,13 @@ int main(int argc, const char * argv[]) {
     string* data = nullptr;
     try {
         data = process_input(argv[1]);
-        // for (int i = 0; i < 4; i++) {
-        //     cout << data[i] << endl;
-        // }
+
     } catch (const std::exception& e) {
         cerr << "Error: " << e.what() << endl;
       
     }
-    DES1 alg = DES1();
+    DES2 alg = DES2();
 
-
-    // PASSED
-    //alg.permutate_plaintext(data[0]);
     cout << "Plaintext: " <<  data[0] << endl;
     string cipher = alg.encrypt(data[0], data[1], data[2]);
     cout << "Cipher:    "<<  cipher << endl;
@@ -122,14 +115,6 @@ int main(int argc, const char * argv[]) {
 
 
     handle_outfile(data);
-    //cout <<alg.encrypt(data[0], data[2]) << endl;
-    //PASSED
-    //vector<string> keys = alg.permutate_key(data[2]);
-    //cout << keys[0] << keys[1] << endl;
-    // PASSED
-    //alg.left_shift(keys, 2);
-
-
    
     return 0;
 }
