@@ -8,7 +8,7 @@ class DES3{
 
     public:
 
-        DES0();
+        DES3();
 
 
         vector<string> permutate_key(string key);
