@@ -8,3 +8,8 @@ To run the avalanche analysis functionality please use the following command
 ```
 make auto ARGS="-e <input_file>"
 ```
+
+To run the file decryption functionality please use the following command
+```
+make auto ARGS="-d <input_file>"
+```
