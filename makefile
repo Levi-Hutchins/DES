@@ -26,7 +26,7 @@ run-default: $(EXECUTABLE)
 	./$(EXECUTABLE) $(ARGS)
 
 
-encrypt:
+auto:
 	@$(MAKE) all
 	@$(MAKE) run-default ARGS="$(ARGS)"
 	@$(MAKE) clean
