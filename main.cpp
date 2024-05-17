@@ -163,8 +163,16 @@ int main(int argc, const char * argv[]) {
 
         }
         else if( flag == "-d"){
-            data = process_input(argv[2], false);
+            try {
+                        data = process_input(argv[2], false);
+                } catch (const std::exception& e) {
+                        cerr << "Error: " << e.what() << endl;
+                }
             handle_decryption_file(data);
+            cout << " " << endl;
+            cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see decryption_outfile.txt for results" << endl; 
+            cout << " " << endl;
+
         }
         else{
             cerr << "An Error Occured " << endl;
