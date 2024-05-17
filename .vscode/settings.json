@@ -99,6 +99,10 @@
     "tuple": "cpp",
     "typeinfo": "cpp",
     "variant": "cpp",
-    "algorithm": "cpp"
+    "algorithm": "cpp",
+    "charconv": "cpp",
+    "fstream": "cpp",
+    "iomanip": "cpp",
+    "optional": "cpp"
   }
 }

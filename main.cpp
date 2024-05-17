@@ -61,7 +61,7 @@ void handle_outfile(const string* data){
 
 
 
-    ofstream outfile("outfile.txt");
+    ofstream outfile("analysis_outfile.txt");
     outfile << "Avalanche Demonstration" << endl;
     outfile << "Plaintext P: " << data[0] << endl;;
     outfile << "Plaintext P': " << data[1] << endl;
@@ -95,26 +95,59 @@ void handle_outfile(const string* data){
     outfile.close();
 }
 
-int main(int argc, const char * argv[]) {
-
-    string* data = nullptr;
-    try {
-        data = process_input(argv[1]);
-
-    } catch (const std::exception& e) {
-        cerr << "Error: " << e.what() << endl;
-      
+bool validate_args(int argc, const char * argv[]){
+    if(argc != 3){
+        std::cerr << "Usage: " << argv[0] << " -e <file_name>" << std::endl;
+        return false;
     }
-    DES2 alg = DES2();
+    string first_arg = argv[1];
+    if((first_arg == "-e" || first_arg == "-d") && argv[2] != nullptr){
+        return true;
+    }
 
-    cout << "Plaintext: " <<  data[0] << endl;
-    string cipher = alg.encrypt(data[0], data[1], data[2]);
-    cout << "Cipher:    "<<  cipher << endl;
-    cout << "Decrypt:   "<<alg.decrypt(cipher, data[1]) << endl;
+    return false;
 
 
+}
 
-    handle_outfile(data);
-   
+
+int main(int argc, const char * argv[]) {
+    const char* GREEN_COLOR_CODE = "\033[1;32m";
+    const char* RESET_COLOR_CODE = "\033[0m";
+    
+    string* data = nullptr;
+    if(validate_args(argc, argv)){
+        string flag = argv[1];
+
+        if(flag == "-e"){
+             try {
+                        data = process_input(argv[2]);
+                } catch (const std::exception& e) {
+                        cerr << "Error: " << e.what() << endl;
+                }
+            cout << " " << endl;
+            handle_outfile(data);
+            cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see analysis_outfile.txt for results" << endl; 
+            cout << " " << endl;
+
+        }
+        else if( flag == "-d"){
+
+        }
+        else{
+            cerr << "An Error Occured " << endl;
+
+        }
+    }
+    else{
+        std::cerr << "Encryption Usage: " << argv[0] << " -e <file_name>" << std::endl;
+        std::cerr << "Decryption Usage: " << argv[0] << " -d <file_name>" << std::endl;
+
+        return 1;
+    }
+
+
     return 0;
+
+  
 }
