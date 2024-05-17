@@ -12,25 +12,45 @@ using namespace std;
 
 /**
  * @param file_location: string that represents file location
+ * @param is_encrypt: determine which file reading functionality is required
  * @return values: string array with the following:
- *                 [0] P - Plaintext
+ *   CASE1         [0] P - Plaintext
  *                 [1] P': Plaintext with 1 bit flipped
  *                 [2] K: Key for encryption
  *                 [3] K': Key with 1 bit flipped
+ * @return values: string array with the following:
+ *   CASE2         [0] P - Plaintext
+ *                 [1] K: Key for encryption
  */
-string* process_input(string file_location) {
-     string* values = new string[4];
-    ifstream file(file_location);
+string* process_input(string file_location, bool is_encrypt) {
 
-    if (!file.is_open()) {
-        delete[] values; 
-        throw runtime_error("Unable to open file: " + file_location);
+    if(is_encrypt){
+        string* values = new string[4];
+        ifstream file(file_location);
+
+        if (!file.is_open()) {
+            delete[] values; 
+            throw runtime_error("Unable to open file: " + file_location);
+        }
+
+        for (int i = 0; i < 4 && getline(file, values[i]); ++i);
+        file.close();
+        return values;
     }
+    else{
+        string* values = new string[2];
+        ifstream file(file_location);
 
-    for (int i = 0; i < 4 && getline(file, values[i]); ++i);
-    file.close();
+        if (!file.is_open()) {
+            delete[] values; 
+            throw runtime_error("Unable to open file: " + file_location);
+        }
 
-    return values;
+        for (int i = 0; i < 2 && getline(file, values[i]); ++i);
+        file.close();
+        return values;
+    }
+    
 }
 
 void handle_outfile(const string* data){
@@ -61,7 +81,7 @@ void handle_outfile(const string* data){
 
 
 
-    ofstream outfile("outfile.txt");
+    ofstream outfile("analysis_outfile.txt");
     outfile << "Avalanche Demonstration" << endl;
     outfile << "Plaintext P: " << data[0] << endl;;
     outfile << "Plaintext P': " << data[1] << endl;
@@ -95,26 +115,79 @@ void handle_outfile(const string* data){
     outfile.close();
 }
 
-int main(int argc, const char * argv[]) {
+void handle_decryption_file(const string* data){
+    ofstream outfile("decryption_outfile.txt");
+    outfile << "DECRYPTION" << endl;
+    outfile << "Ciphertext C: " << data[0] << endl;
+    outfile << "Key K: " << data[1] << endl; 
+    DES0 des = DES0();
+    outfile << "Plaintext P: "<<des.decrypt(data[0], data[1]) << endl;;
 
-    string* data = nullptr;
-    try {
-        data = process_input(argv[1]);
 
-    } catch (const std::exception& e) {
-        cerr << "Error: " << e.what() << endl;
-      
+}
+
+bool validate_args(int argc, const char * argv[]){
+    if(argc != 3){
+        std::cerr << "Usage: " << argv[0] << " -e <file_name>" << std::endl;
+        return false;
     }
-    DES2 alg = DES2();
+    string first_arg = argv[1];
+    if((first_arg == "-e" || first_arg == "-d") && argv[2] != nullptr){
+        return true;
+    }
 
-    cout << "Plaintext: " <<  data[0] << endl;
-    string cipher = alg.encrypt(data[0], data[1], data[2]);
-    cout << "Cipher:    "<<  cipher << endl;
-    cout << "Decrypt:   "<<alg.decrypt(cipher, data[1]) << endl;
+    return false;
 
 
+}
 
-    handle_outfile(data);
-   
+
+int main(int argc, const char * argv[]) {
+    const char* GREEN_COLOR_CODE = "\033[1;32m";
+    const char* RESET_COLOR_CODE = "\033[0m";
+    
+    string* data = nullptr;
+    if(validate_args(argc, argv)){
+        string flag = argv[1];
+
+        if(flag == "-e"){
+             try {
+                        data = process_input(argv[2], true);
+                } catch (const std::exception& e) {
+                        cerr << "Error: " << e.what() << endl;
+                }
+            cout << " " << endl;
+            handle_outfile(data);
+            cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see analysis_outfile.txt for results" << endl; 
+            cout << " " << endl;
+
+        }
+        else if( flag == "-d"){
+            try {
+                        data = process_input(argv[2], false);
+                } catch (const std::exception& e) {
+                        cerr << "Error: " << e.what() << endl;
+                }
+            handle_decryption_file(data);
+            cout << " " << endl;
+            cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see decryption_outfile.txt for results" << endl; 
+            cout << " " << endl;
+
+        }
+        else{
+            cerr << "An Error Occured " << endl;
+
+        }
+    }
+    else{
+        std::cerr << "Encryption Usage: " << argv[0] << " -e <file_name>" << std::endl;
+        std::cerr << "Decryption Usage: " << argv[0] << " -d <file_name>" << std::endl;
+
+        return 1;
+    }
+
+
     return 0;
+
+  
 }
