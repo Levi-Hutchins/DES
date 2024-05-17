@@ -12,25 +12,45 @@ using namespace std;
 
 /**
  * @param file_location: string that represents file location
+ * @param is_encrypt: determine which file reading functionality is required
  * @return values: string array with the following:
- *                 [0] P - Plaintext
+ *   CASE1         [0] P - Plaintext
  *                 [1] P': Plaintext with 1 bit flipped
  *                 [2] K: Key for encryption
  *                 [3] K': Key with 1 bit flipped
+ * @return values: string array with the following:
+ *   CASE2         [0] P - Plaintext
+ *                 [1] K: Key for encryption
  */
-string* process_input(string file_location) {
-     string* values = new string[4];
-    ifstream file(file_location);
+string* process_input(string file_location, bool is_encrypt) {
 
-    if (!file.is_open()) {
-        delete[] values; 
-        throw runtime_error("Unable to open file: " + file_location);
+    if(is_encrypt){
+        string* values = new string[4];
+        ifstream file(file_location);
+
+        if (!file.is_open()) {
+            delete[] values; 
+            throw runtime_error("Unable to open file: " + file_location);
+        }
+
+        for (int i = 0; i < 4 && getline(file, values[i]); ++i);
+        file.close();
+        return values;
     }
+    else{
+        string* values = new string[2];
+        ifstream file(file_location);
 
-    for (int i = 0; i < 4 && getline(file, values[i]); ++i);
-    file.close();
+        if (!file.is_open()) {
+            delete[] values; 
+            throw runtime_error("Unable to open file: " + file_location);
+        }
 
-    return values;
+        for (int i = 0; i < 2 && getline(file, values[i]); ++i);
+        file.close();
+        return values;
+    }
+    
 }
 
 void handle_outfile(const string* data){
@@ -95,6 +115,17 @@ void handle_outfile(const string* data){
     outfile.close();
 }
 
+void handle_decryption_file(const string* data){
+    ofstream outfile("decryption_outfile.txt");
+    outfile << "DECRYPTION" << endl;
+    outfile << "Ciphertext C: " << data[0] << endl;
+    outfile << "Key K: " << data[1] << endl; 
+    DES0 des = DES0();
+    outfile << "Plaintext P: "<<des.decrypt(data[0], data[1]) << endl;;
+
+
+}
+
 bool validate_args(int argc, const char * argv[]){
     if(argc != 3){
         std::cerr << "Usage: " << argv[0] << " -e <file_name>" << std::endl;
@@ -121,7 +152,7 @@ int main(int argc, const char * argv[]) {
 
         if(flag == "-e"){
              try {
-                        data = process_input(argv[2]);
+                        data = process_input(argv[2], true);
                 } catch (const std::exception& e) {
                         cerr << "Error: " << e.what() << endl;
                 }
@@ -132,7 +163,8 @@ int main(int argc, const char * argv[]) {
 
         }
         else if( flag == "-d"){
-
+            data = process_input(argv[2], false);
+            handle_decryption_file(data);
         }
         else{
             cerr << "An Error Occured " << endl;
