@@ -1,6 +1,7 @@
 #include "DES0.h"
 #include "DES1.h"
 #include "DES2.h"
+#include "DES3.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -64,6 +65,7 @@ void handle_outfile(const string* data){
     DES0 des0;
     DES1 des1;
     DES2 des2;
+    DES3 des3;
     // DES3 des3;
     auto t2 = high_resolution_clock::now();
     duration<double, milli> ms_double = t2 - t1;
@@ -78,6 +80,9 @@ void handle_outfile(const string* data){
 
     string cipher2 = des2.encrypt(data[0], data[1], data[2]);
     vector<int> des2_bits = des2.get_bit_difference();
+
+    string cipher3 = des3.encrypt(data[0], data[1], data[2]);
+    vector<int> des3_bits = des3.get_bit_difference();
 
 
 
@@ -108,7 +113,8 @@ void handle_outfile(const string* data){
         outfile << std::setw(15) << i
                 << std::setw(15) << des0_bits.at(i)
                 << std::setw(15) << des1_bits.at(i)
-                << std::setw(15) << des2_bits.at(i) << endl;
+                << std::setw(15) << des2_bits.at(i)
+                << std::setw(15) << des3_bits.at(i)<< endl;
 
     }
 
