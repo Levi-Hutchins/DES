@@ -176,44 +176,52 @@ int main(int argc, const char * argv[]) {
     const char* GREEN_COLOR_CODE = "\033[1;32m";
     const char* RESET_COLOR_CODE = "\033[0m";
     
-    string* data = nullptr;
-    if(validate_args(argc, argv)){
-        string flag = argv[1];
+    // string* data = nullptr;
+    // if(validate_args(argc, argv)){
+    //     string flag = argv[1];
 
-        if(flag == "-e"){
-             try {
-                        data = process_input(argv[2], true);
-                } catch (const std::exception& e) {
-                        cerr << "Error: " << e.what() << endl;
-                }
-            cout << " " << endl;
-            handle_outfile(data);
-            cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see analysis_outfile.txt for results" << endl; 
-            cout << " " << endl;
+    //     if(flag == "-e"){
+    //          try {
+    //                     data = process_input(argv[2], true);
+    //             } catch (const std::exception& e) {
+    //                     cerr << "Error: " << e.what() << endl;
+    //             }
+    //         cout << " " << endl;
+    //         handle_outfile(data);
+    //         cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see analysis_outfile.txt for results" << endl; 
+    //         cout << " " << endl;
 
-        }
-        else if( flag == "-d"){
-            try {
-                        data = process_input(argv[2], false);
-                } catch (const std::exception& e) {
-                        cerr << "Error: " << e.what() << endl;
-                }
-            handle_decryption_file(data);
-            cout << " " << endl;
-            cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see decryption_outfile.txt for results" << endl; 
-            cout << " " << endl;
+    //     }
+    //     else if( flag == "-d"){
+    //         try {
+    //                     data = process_input(argv[2], false);
+    //             } catch (const std::exception& e) {
+    //                     cerr << "Error: " << e.what() << endl;
+    //             }
+    //         handle_decryption_file(data);
+    //         cout << " " << endl;
+    //         cout << GREEN_COLOR_CODE << "SUCCESS: " << RESET_COLOR_CODE << "Please see decryption_outfile.txt for results" << endl; 
+    //         cout << " " << endl;
 
-        }
-        else{
-            cerr << "An Error Occured " << endl;
+    //     }
+    //     else{
+    //         cerr << "An Error Occured " << endl;
 
-        }
-    }
-    else{
-        std::cerr << "Encryption Usage: " << argv[0] << " -e <file_name>" << std::endl;
-        std::cerr << "Decryption Usage: " << argv[0] << " -d <file_name>" << std::endl;
+    //     }
+    // }
+    // else{
+    //     std::cerr << "Encryption Usage: " << argv[0] << " -e <file_name>" << std::endl;
+    //     std::cerr << "Decryption Usage: " << argv[0] << " -d <file_name>" << std::endl;
 
-        return 1;
+    //     return 1;
+    // }
+
+
+    DES0 des0;
+    string cipher  = des0.encryptv2("1101011000110101001001111001010110100010110001101110010100011101",
+    "0110111100011010011110001000100001110001011100100111010000100010","1110111100011010011110001000100001110001011100100111010000100010");
+    for (int i = 0; i < des0.get_bit_difference().size(); i++){
+        cout << des0.get_bit_difference().at(i) << endl;
     }
 
 

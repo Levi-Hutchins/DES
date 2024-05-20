@@ -32,7 +32,7 @@ class DES0{
         string decrypt(const string& ciphertext, const string& key);
 
         string final_permutation(const string& data);
-
+        string encryptv2(const string& pt, const string& key, const string& key_prime);       
         void count_bit_changes(const string& pt, const string& pt_prime);
 
         vector<int> get_bit_difference();
@@ -45,8 +45,11 @@ class DES0{
     private:
         vector<int> bit_differences;
         vector<string> c0_d0;
+        vector<string> c0_d0_prime;
         vector<string> roundKeys;
+        vector<string> roundKeys_prime;
         string original_key;
+        bool is_prime_key = false;
 
 
 
