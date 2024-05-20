@@ -112,13 +112,13 @@ void handle_outfile(const string* data){
 
     }
 
-    string cipher = des0.encrypt(data[0], data[0], data[2]);
-    string cipher_prime = des0.encrypt(data[0], data[0], data[3]);
+    cipher = des0.encrypt(data[0], data[0], data[2]);
+    cipher_prime = des0.encrypt(data[0], data[0], data[3]);
 
     des1.encrypt(data[0], data[1], data[2]);
     des2.encrypt(data[0], data[1], data[2]);
     des3.encrypt(data[0], data[1], data[2]);
-    
+
     outfile << "P under K and K`"<< endl;
     outfile << "Ciphertext C:  " << cipher << endl;
     outfile << "Ciphertext C': " << cipher_prime << endl;
