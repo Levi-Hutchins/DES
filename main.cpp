@@ -72,17 +72,11 @@ void handle_outfile(const string* data){
     string time = to_string(ms_double.count());
 
     string cipher = des0.encrypt(data[0], data[1], data[2]);
-    vector<int> des0_bits = des0.get_bit_difference();
     string cipher_prime = des0.encrypt(data[1], data[0], data[2]);
 
-    string cipher1 = des1.encrypt(data[0], data[1], data[2]);
-    vector<int> des1_bits = des1.get_bit_difference();
-
-    string cipher2 = des2.encrypt(data[0], data[1], data[2]);
-    vector<int> des2_bits = des2.get_bit_difference();
-
-    string cipher3 = des3.encrypt(data[0], data[1], data[2]);
-    vector<int> des3_bits = des3.get_bit_difference();
+    des1.encrypt(data[0], data[1], data[2]);
+    des2.encrypt(data[0], data[1], data[2]);
+    des3.encrypt(data[0], data[1], data[2]);
 
 
 
@@ -111,10 +105,40 @@ void handle_outfile(const string* data){
 
     for(int i = 0; i < 16; i++){
         outfile << std::setw(15) << i
-                << std::setw(15) << des0_bits.at(i)
-                << std::setw(15) << des1_bits.at(i)
-                << std::setw(15) << des2_bits.at(i)
-                << std::setw(15) << des3_bits.at(i)<< endl;
+                << std::setw(15) << des0.get_bit_difference().at(i)
+                << std::setw(15) << des1.get_bit_difference().at(i)
+                << std::setw(15) << des2.get_bit_difference().at(i)
+                << std::setw(15) << des3.get_bit_difference().at(i)<< endl;
+
+    }
+
+    string cipher = des0.encrypt(data[0], data[0], data[2]);
+    string cipher_prime = des0.encrypt(data[0], data[0], data[3]);
+
+    des1.encrypt(data[0], data[1], data[2]);
+    des2.encrypt(data[0], data[1], data[2]);
+    des3.encrypt(data[0], data[1], data[2]);
+    
+    outfile << "P under K and K`"<< endl;
+    outfile << "Ciphertext C:  " << cipher << endl;
+    outfile << "Ciphertext C': " << cipher_prime << endl;
+
+
+    outfile << std::left;  // Align text to the left
+    outfile << std::setw(15) << "Round"
+              << std::setw(15) << "DES0"
+              << std::setw(15) << "DES1"
+              << std::setw(15) << "DES2"
+              << std::setw(15) << "DES3" << std::endl;
+
+    outfile << std::string(15 * 5, '-') << std::endl;
+
+    for(int i = 0; i < 16; i++){
+        outfile << std::setw(15) << i
+                << std::setw(15) << des0.get_bit_difference().at(i)
+                << std::setw(15) << des1.get_bit_difference().at(i)
+                << std::setw(15) << des2.get_bit_difference().at(i)
+                << std::setw(15) << des3.get_bit_difference().at(i)<< endl;
 
     }
 

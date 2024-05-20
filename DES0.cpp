@@ -232,6 +232,7 @@ void DES0::count_bit_changes(const string& pt, const string& pt_prime) {
  *               generating all 16 subkeys required for the encryption rounds.
  */
 string DES0::encrypt(const string& pt, const string& pt_prime, const string& key) {
+    
     permutate_key(key);
     generate_subkeys();
 
