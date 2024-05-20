@@ -159,8 +159,11 @@ string DES2::feistel_function(const string& right, const string& roundKey) {
 
     // Apply inverse of expansion permutation to contract from 48 to 32 bits
     string contractedRight(32, '0');
-    for (int i = 0; i < 32; i++) {
-        contractedRight[i] = result[Permutations::CONTRACTION_PERMUTATION[i] - 1];
+    for (int i = 0; i < 8; i++) {  // Assuming 8 rows
+        for (int j = 0; j < 4; j++) {  // Assuming 4 columns per row
+            int idx = i * 4 + j;
+            contractedRight[idx] = result[Permutations::INVERSE_IP[i][j] - 1];
+        }
     }
 
     return contractedRight;

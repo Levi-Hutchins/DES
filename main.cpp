@@ -1,6 +1,7 @@
 #include "DES0.h"
 #include "DES1.h"
 #include "DES2.h"
+#include "DES3.h"
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -64,20 +65,18 @@ void handle_outfile(const string* data){
     DES0 des0;
     DES1 des1;
     DES2 des2;
+    DES3 des3;
     // DES3 des3;
     auto t2 = high_resolution_clock::now();
     duration<double, milli> ms_double = t2 - t1;
     string time = to_string(ms_double.count());
 
     string cipher = des0.encrypt(data[0], data[1], data[2]);
-    vector<int> des0_bits = des0.get_bit_difference();
     string cipher_prime = des0.encrypt(data[1], data[0], data[2]);
 
-    string cipher1 = des1.encrypt(data[0], data[1], data[2]);
-    vector<int> des1_bits = des1.get_bit_difference();
-
-    string cipher2 = des2.encrypt(data[0], data[1], data[2]);
-    vector<int> des2_bits = des2.get_bit_difference();
+    des1.encrypt(data[0], data[1], data[2]);
+    des2.encrypt(data[0], data[1], data[2]);
+    des3.encrypt(data[0], data[1], data[2]);
 
 
 
@@ -106,9 +105,40 @@ void handle_outfile(const string* data){
 
     for(int i = 0; i < 16; i++){
         outfile << std::setw(15) << i
-                << std::setw(15) << des0_bits.at(i)
-                << std::setw(15) << des1_bits.at(i)
-                << std::setw(15) << des2_bits.at(i) << endl;
+                << std::setw(15) << des0.get_bit_difference().at(i)
+                << std::setw(15) << des1.get_bit_difference().at(i)
+                << std::setw(15) << des2.get_bit_difference().at(i)
+                << std::setw(15) << des3.get_bit_difference().at(i)<< endl;
+
+    }
+
+    cipher = des0.encrypt(data[0], data[0], data[2]);
+    cipher_prime = des0.encrypt(data[0], data[0], data[3]);
+
+    des1.encrypt(data[0], data[1], data[2]);
+    des2.encrypt(data[0], data[1], data[2]);
+    des3.encrypt(data[0], data[1], data[2]);
+
+    outfile << "P under K and K`"<< endl;
+    outfile << "Ciphertext C:  " << cipher << endl;
+    outfile << "Ciphertext C': " << cipher_prime << endl;
+
+
+    outfile << std::left;  // Align text to the left
+    outfile << std::setw(15) << "Round"
+              << std::setw(15) << "DES0"
+              << std::setw(15) << "DES1"
+              << std::setw(15) << "DES2"
+              << std::setw(15) << "DES3" << std::endl;
+
+    outfile << std::string(15 * 5, '-') << std::endl;
+
+    for(int i = 0; i < 16; i++){
+        outfile << std::setw(15) << i
+                << std::setw(15) << des0.get_bit_difference().at(i)
+                << std::setw(15) << des1.get_bit_difference().at(i)
+                << std::setw(15) << des2.get_bit_difference().at(i)
+                << std::setw(15) << des3.get_bit_difference().at(i)<< endl;
 
     }
 

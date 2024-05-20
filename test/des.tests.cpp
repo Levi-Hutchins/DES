@@ -2,6 +2,8 @@
 #include "../DES0.h"
 #include "../DES1.h"
 #include "../DES2.h"
+#include "../DES3.h"
+
 
 const char* GREEN_COLOR_CODE = "\033[1;32m";
 const char* RED_COLOR_CODE = "\033[1;31m";
@@ -42,6 +44,7 @@ void test_encrypt_decrypt() {
     DES0 des0 = DES0();
     DES1 des1 = DES1();
     DES2 des2 = DES2();
+    DES3 des3 = DES3();
 
     // Plaintext
     std::string plaintext1 = "1101011000110101001001111001010110100010110001101110010100011101";
@@ -63,8 +66,9 @@ void test_encrypt_decrypt() {
     std::string decrypted_text2 = des2.decrypt(ciphertext2, key1);
     IS_TRUE(compare_strings(plaintext1, decrypted_text2));
     
-    //IS_TRUE(compare_strings(plaintext2, decrypted_text2));
-
+    std::string ciphertext3 = des3.encrypt(plaintext1, plaintext2,  key1);
+    std::string decrypted_text3 = des3.decrypt(ciphertext3, key1);
+    IS_TRUE(compare_strings(plaintext1, decrypted_text3));
 }
 
 
