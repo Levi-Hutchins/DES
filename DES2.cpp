@@ -1,7 +1,8 @@
 /*
 Author: Levi Hutchins C3386116
 Course: COMP3260
-Desc:
+Desc: This file is the implementation of the DES2 variation. DES2 does not make use of the SBoxes in the F function
+instead uses the inverse expansion permutation to perform contraction from 48 bits to 32
 */
 #include "DES2.h"
 #include "Permutations.h"

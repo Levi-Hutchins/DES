@@ -1,7 +1,7 @@
 /*
 Author: Levi Hutchins C3386116
 Course: COMP3260
-Desc:
+Desc: This file is the implementation of the DES3 variation. DES3 the permnutaiton is missing from the F fucntion
 */
 #include "DES3.h"
 #include "SBoxes.h"
