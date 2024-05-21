@@ -122,8 +122,8 @@ void handle_outfile(const string* data){
 
 
     outfile << "P under K and K`"<< endl;
-    outfile << "Ciphertext C:  " << ciphers3.at(0) << endl;
-    outfile << "Ciphertext C': " << ciphers3.at(1) << endl;
+    outfile << "Ciphertext C:  " << ciphers0.at(0) << endl;
+    outfile << "Ciphertext C': " << ciphers0.at(1) << endl;
 
 
     outfile << std::left;  // Align text to the left
