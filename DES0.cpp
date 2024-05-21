@@ -24,14 +24,16 @@ DES0::DES0(){
             permutedKey += key[pos - 1];  
         }
     }
-    // Ensure it is empty before pushing back (decryption)
-    this->c0_d0.clear();
-    // Position 0 = c0
-    this->c0_d0.push_back(permutedKey.substr(0,28));
-    // Position 1 = d0
-    this->c0_d0.push_back(permutedKey.substr(28,28));
-
-    return this->c0_d0;
+   if (!this->is_prime_key) {
+        this->c0_d0.clear();
+        this->c0_d0.push_back(permutedKey.substr(0, 28));
+        this->c0_d0.push_back(permutedKey.substr(28, 28));
+    } else {
+        this->c0_d0_prime.clear();
+        this->c0_d0_prime.push_back(permutedKey.substr(0, 28));
+        this->c0_d0_prime.push_back(permutedKey.substr(28, 28));
+    }
+    return !this->is_prime_key ? this->c0_d0 : this->c0_d0_prime;
 }
 
 /**
@@ -78,14 +80,22 @@ string DES0::final_permutation(const string& data) {
  * @desc:  Performs left shift count amount of times 
  */
 void DES0::left_shift(int count){
-    for (int k = 0; k < 2; k++) {
-        string &half = c0_d0[k];  
-        string temp = half;      
-        
-        for (size_t i = 0; i < half.size(); i++) {
-            half[i] = temp[(i + count) % half.size()];
+    if (!this->is_prime_key) {
+        for (int k = 0; k < 2; k++) {
+            string &half = this->c0_d0[k];
+            string temp = half;
+            for (size_t i = 0; i < half.size(); i++) {
+                half[i] = temp[(i + count) % half.size()];
+            }
         }
-    
+    } else {
+        for (int k = 0; k < 2; k++) {
+            string &half = this->c0_d0_prime[k];
+            string temp = half;
+            for (size_t i = 0; i < half.size(); i++) {
+                half[i] = temp[(i + count) % half.size()];
+            }
+        }
     }
 }
 
@@ -110,18 +120,26 @@ string DES0::applyPC2(const string& combined) {
  *               the key halves according to the shift schedule specified by DES. 
  */
 void DES0::generate_subkeys() {
+    string combinedKey = "";
+    if (!this->is_prime_key) {
+        this->roundKeys.clear();
+        for (int i = 0; i < 16; i++) {
+            left_shift(Permutations::shiftSchedule[i]);
+            combinedKey = c0_d0[0] + c0_d0[1];
+            string roundKey = applyPC2(combinedKey);
+            this->roundKeys.push_back(roundKey);
+        }
+    } else {
+        this->roundKeys_prime.clear();
+        for (int i = 0; i < 16; i++) {
+            left_shift(Permutations::shiftSchedule[i]);
+            combinedKey = c0_d0_prime[0] + c0_d0_prime[1];
+            string roundKey = applyPC2(combinedKey);
+            this->roundKeys_prime.push_back(roundKey);
 
-    string combinedKey;
-
-    for (int i = 0; i < 16; i++) {
-        left_shift(Permutations::shiftSchedule[i]);
-
-        combinedKey = c0_d0[0] + c0_d0[1];
-        string roundKey = applyPC2(combinedKey);
-        this->roundKeys.push_back(roundKey);
+        }
     }
 }
-
 /** 
  * @param a The first binary string.
  * @param b The second binary string.
@@ -232,7 +250,11 @@ void DES0::count_bit_changes(const string& pt, const string& pt_prime) {
  *               generating all 16 subkeys required for the encryption rounds.
  */
 string DES0::encrypt(const string& pt, const string& pt_prime, const string& key) {
-    
+    this->roundKeys.clear();
+    this->roundKeys_prime.clear();
+    this->bit_differences.clear();
+
+    this->is_prime_key = false;
     permutate_key(key);
     generate_subkeys();
 
@@ -249,16 +271,51 @@ string DES0::encrypt(const string& pt, const string& pt_prime, const string& key
         pt_left = pt_right;
         pt_right = xor_strings(nextRight, feistel_function(pt_right, this->roundKeys[i]));
 
-
         string nextRight_PRIME = pt_prime_left;
         pt_prime_left = pt_prime_right;
         pt_prime_right = xor_strings(nextRight_PRIME, feistel_function(pt_prime_right, this->roundKeys[i]));
+
         count_bit_changes((pt_right + pt_left), (pt_prime_right + pt_prime_left));
     }
+    
+    return final_permutation(pt_right + pt_left);
+}
+vector<string> DES0::encrypt_with_two_keys(const string& pt, const string& key, const string& key_prime) {
+    vector<string> ciphers;
+    this->roundKeys.clear();
+    this->roundKeys_prime.clear();
+    this->bit_differences.clear();
 
-    string finalPermutation = final_permutation(pt_right + pt_left); 
+    this->is_prime_key = false;
+    permutate_key(key);
+    generate_subkeys();
 
-    return finalPermutation;
+    this->is_prime_key = true;
+    permutate_key(key_prime);
+    generate_subkeys();
+
+    string pt_initial_perm = permutate_plaintext(pt);
+    string pt_left = pt_initial_perm.substr(0, 32);
+    string pt_right = pt_initial_perm.substr(32, 32);
+
+    string pt_prime_left = pt_left;
+    string pt_prime_right = pt_right;
+
+    for (int i = 0; i < 16; i++) {
+        count_bit_changes(pt_right + pt_left, pt_prime_right + pt_prime_left);
+
+        string nextRight = pt_left;
+        pt_left = pt_right;
+        pt_right = xor_strings(nextRight, feistel_function(pt_right, this->roundKeys[i]));
+
+        string nextRight_PRIME = pt_prime_left;
+        pt_prime_left = pt_prime_right;
+        pt_prime_right = xor_strings(nextRight_PRIME, feistel_function(pt_prime_right, this->roundKeys_prime[i]));
+    }
+    ciphers.push_back(final_permutation(pt_right+pt_left));
+    ciphers.push_back(final_permutation(pt_prime_right+pt_prime_left));
+
+    return ciphers;
 }
 /**
  * @param ciphertext The ciphertext string to be decrypted.

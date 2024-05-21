@@ -111,17 +111,12 @@ void handle_outfile(const string* data){
                 << std::setw(15) << des3.get_bit_difference().at(i)<< endl;
 
     }
-
-    cipher = des0.encrypt(data[0], data[0], data[2]);
-    cipher_prime = des0.encrypt(data[0], data[0], data[3]);
-
-    des1.encrypt(data[0], data[1], data[2]);
-    des2.encrypt(data[0], data[1], data[2]);
-    des3.encrypt(data[0], data[1], data[2]);
+    DES0 newdes0;
+    vector<string> ciphers = newdes0.encrypt_with_two_keys(data[0], data[2], data[3]);
 
     outfile << "P under K and K`"<< endl;
-    outfile << "Ciphertext C:  " << cipher << endl;
-    outfile << "Ciphertext C': " << cipher_prime << endl;
+    outfile << "Ciphertext C:  " << ciphers.at(0) << endl;
+    outfile << "Ciphertext C': " << ciphers.at(1) << endl;
 
 
     outfile << std::left;  // Align text to the left
