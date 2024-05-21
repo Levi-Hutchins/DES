@@ -1,3 +1,9 @@
+/*
+Author: Levi Hutchins C3386116
+Course: COMP3260
+Desc:
+*/
+
 #include "DES0.h"
 #include "DES1.h"
 #include "DES2.h"
@@ -54,6 +60,11 @@ string* process_input(string file_location, bool is_encrypt) {
     
 }
 
+/**
+ * @param data: array of all the binary values
+ * desc: handles all the outfile logi of encrpytion and bit differences
+ * formats it all as required by spec. 
+ */
 void handle_outfile(const string* data){
   
     using chrono::high_resolution_clock;
@@ -61,24 +72,21 @@ void handle_outfile(const string* data){
     using chrono::duration;
     using chrono::milliseconds;
 
-    auto t1 = high_resolution_clock::now();
     DES0 des0;
     DES1 des1;
     DES2 des2;
     DES3 des3;
-    // DES3 des3;
+
+    auto t1 = high_resolution_clock::now();
+    string cipher = des0.encrypt(data[0], data[1], data[2]);
+    des1.encrypt(data[0], data[1], data[2]);
+    des2.encrypt(data[0], data[1], data[2]);
+    des3.encrypt(data[0], data[1], data[2]);
     auto t2 = high_resolution_clock::now();
     duration<double, milli> ms_double = t2 - t1;
     string time = to_string(ms_double.count());
 
-    string cipher = des0.encrypt(data[0], data[1], data[2]);
     string cipher_prime = des0.encrypt(data[1], data[0], data[2]);
-
-    des1.encrypt(data[0], data[1], data[2]);
-    des2.encrypt(data[0], data[1], data[2]);
-    des3.encrypt(data[0], data[1], data[2]);
-
-
 
     ofstream outfile("analysis_outfile.txt");
     outfile << "Avalanche Demonstration" << endl;
@@ -112,19 +120,17 @@ void handle_outfile(const string* data){
 
     }
 
-    cipher = des0.encrypt(data[0], data[0], data[2]);
-    cipher_prime = des0.encrypt(data[0], data[0], data[3]);
-
-    des1.encrypt(data[0], data[1], data[2]);
-    des2.encrypt(data[0], data[1], data[2]);
-    des3.encrypt(data[0], data[1], data[2]);
-
+    /*******************************************************************************/
+    vector<string> ciphers0 = des0.encrypt_with_two_keys(data[0], data[2], data[3]);
+    vector<string> ciphers1 = des1.encrypt_with_two_keys(data[0], data[2], data[3]);
+    vector<string> ciphers2 = des2.encrypt_with_two_keys(data[0], data[2], data[3]);
+    vector<string> ciphers3 = des3.encrypt_with_two_keys(data[0], data[2], data[3]);
     outfile << "P under K and K`"<< endl;
-    outfile << "Ciphertext C:  " << cipher << endl;
-    outfile << "Ciphertext C': " << cipher_prime << endl;
+    outfile << "Ciphertext C:  " << ciphers0.at(0) << endl;
+    outfile << "Ciphertext C': " << ciphers0.at(1) << endl;
 
 
-    outfile << std::left;  // Align text to the left
+    outfile << std::left;  
     outfile << std::setw(15) << "Round"
               << std::setw(15) << "DES0"
               << std::setw(15) << "DES1"
@@ -138,13 +144,18 @@ void handle_outfile(const string* data){
                 << std::setw(15) << des0.get_bit_difference().at(i)
                 << std::setw(15) << des1.get_bit_difference().at(i)
                 << std::setw(15) << des2.get_bit_difference().at(i)
-                << std::setw(15) << des3.get_bit_difference().at(i)<< endl;
+                << std::setw(15) << des3.get_bit_difference().at(i) << endl;
 
     }
 
     outfile.close();
 }
 
+/**
+ * @param data: array of all the binary values
+ * desc:handles the output for a inputted decryption file and formats
+ * the outfile as specified
+ */
 void handle_decryption_file(const string* data){
     ofstream outfile("decryption_outfile.txt");
     outfile << "DECRYPTION" << endl;
@@ -156,6 +167,10 @@ void handle_decryption_file(const string* data){
 
 }
 
+/**
+ * @param argxc, argv: length of args, the args passed in
+ * desc: simply ensures that the -e or -d flag has been used
+ */
 bool validate_args(int argc, const char * argv[]){
     if(argc != 3){
         std::cerr << "Usage: " << argv[0] << " -e <file_name>" << std::endl;
@@ -165,12 +180,10 @@ bool validate_args(int argc, const char * argv[]){
     if((first_arg == "-e" || first_arg == "-d") && argv[2] != nullptr){
         return true;
     }
-
     return false;
 
 
 }
-
 
 int main(int argc, const char * argv[]) {
     const char* GREEN_COLOR_CODE = "\033[1;32m";
@@ -182,9 +195,9 @@ int main(int argc, const char * argv[]) {
 
         if(flag == "-e"){
              try {
-                        data = process_input(argv[2], true);
+                    data = process_input(argv[2], true);
                 } catch (const std::exception& e) {
-                        cerr << "Error: " << e.what() << endl;
+                    cerr << "Error: " << e.what() << endl;
                 }
             cout << " " << endl;
             handle_outfile(data);

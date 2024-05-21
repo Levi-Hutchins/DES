@@ -1,5 +1,9 @@
-// This static class stores all the SBoxes required for DES without the need for initialising
-// an instance of a class
+/*
+Author: Levi Hutchins C3386116
+Course: COMP3260
+Desc: This static class stores all the SBoxes required for DES without the need for initialising
+ an instance of a class
+*/
 #ifndef SBOXES_H
 #define SBOXES_H
 #include<array>
