@@ -23,10 +23,8 @@ class DES2{
 
         string feistel_function(const string& right, const string& round_keys);
 
-        string sBox_substitution(const string &input);
-
-
         string encrypt(const string &plaintext, const string& plaintext_PRIME, const string& key);
+        
         vector<string> encrypt_with_two_keys(const string& pt, const string& key, const string& key_prime);
 
         string decrypt(const string& ciphertext, const string& key);

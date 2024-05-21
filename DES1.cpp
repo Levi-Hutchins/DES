@@ -256,7 +256,6 @@ void DES1::count_bit_changes(const string& pt, const string& pt_prime) {
  * @return The ciphertext string resulting from the encryption process.
  * @description: Performs the DES encryption on both plaintexts which differ by 1 bit
  *              DES1: XOR with round keys missing
-
  */
 string DES1::encrypt(const string& pt, const string& pt_prime, const string& key) {
     // Clear any previously stored round keys and bit differences
@@ -301,7 +300,6 @@ string DES1::encrypt(const string& pt, const string& pt_prime, const string& key
  * @description: Performs the DES encryption on with keys which differ by 1 bit. Performs 
  *              the same process as encrypt() however make use of the two keys on the plaintext
  *              DES1: XOR with round keys missing
-
  */
 vector<string> DES1::encrypt_with_two_keys(const string& pt, const string& key, const string& key_prime) {
     vector<string> ciphers;
@@ -362,6 +360,7 @@ vector<string> DES1::encrypt_with_two_keys(const string& pt, const string& key, 
  */
 string DES1::decrypt(const string& ciphertext, const string& key) {
     permutate_key(key);
+    generate_subkeys();
 
     // Perform the initial permutation on the ciphertext
     string initialPermutation = permutate_plaintext(ciphertext);
@@ -380,6 +379,7 @@ string DES1::decrypt(const string& ciphertext, const string& key) {
     return finalPermutation;
 }
 
+// Retuns the vector of bit differences at every round
 vector<int> DES1::get_bit_difference(){
     return this->bit_differences;
 }
