@@ -120,6 +120,7 @@ void handle_outfile(const string* data){
 
     }
 
+    
     /*******************************************************************************/
     vector<string> ciphers0 = des0.encrypt_with_two_keys(data[0], data[2], data[3]);
     vector<string> ciphers1 = des1.encrypt_with_two_keys(data[0], data[2], data[3]);
