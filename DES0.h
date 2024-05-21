@@ -32,7 +32,7 @@ class DES0{
         string decrypt(const string& ciphertext, const string& key);
 
         string final_permutation(const string& data);
-        string encryptv2(const string& pt, const string& key, const string& key_prime);       
+        vector<string> encryptv2(const string& pt, const string& key, const string& key_prime);       
         void count_bit_changes(const string& pt, const string& pt_prime);
 
         vector<int> get_bit_difference();

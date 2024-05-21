@@ -218,11 +218,14 @@ int main(int argc, const char * argv[]) {
 
 
     DES0 des0;
-    string cipher  = des0.encryptv2("1101011000110101001001111001010110100010110001101110010100011101",
+    vector<string> ciphers  = des0.encryptv2("1101011000110101001001111001010110100010110001101110010100011101",
     "0110111100011010011110001000100001110001011100100111010000100010","1110111100011010011110001000100001110001011100100111010000100010");
     for (int i = 0; i < des0.get_bit_difference().size(); i++){
         cout << des0.get_bit_difference().at(i) << endl;
     }
+
+    cout << ciphers.at(0) << endl;
+    cout << ciphers.at(1) << endl;
 
 
     return 0;

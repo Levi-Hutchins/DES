@@ -192,11 +192,12 @@ string DES0::encrypt(const string& pt, const string& pt_prime, const string& key
 
         count_bit_changes((pt_right + pt_left), (pt_prime_right + pt_prime_left));
     }
-
+    
     return final_permutation(pt_right + pt_left);
 }
 
-string DES0::encryptv2(const string& pt, const string& key, const string& key_prime) {
+vector<string> DES0::encryptv2(const string& pt, const string& key, const string& key_prime) {
+    vector<string> ciphers;
     this->roundKeys.clear();
     this->roundKeys_prime.clear();
     this->bit_differences.clear();
@@ -227,8 +228,10 @@ string DES0::encryptv2(const string& pt, const string& key, const string& key_pr
         pt_prime_left = pt_prime_right;
         pt_prime_right = xor_strings(nextRight_PRIME, feistel_function(pt_prime_right, this->roundKeys_prime[i]));
     }
+    ciphers.push_back(final_permutation(pt_right+pt_left));
+    ciphers.push_back(final_permutation(pt_prime_right+pt_prime_left));
 
-    return final_permutation(pt_right + pt_left);
+    return ciphers;
 }
 
 string DES0::decrypt(const string& ciphertext, const string& key) {
