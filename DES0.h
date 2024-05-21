@@ -1,7 +1,7 @@
 /*
 Author: Levi Hutchins C3386116
 Course: COMP3260
-Desc:
+Desc: Header file for DES0. Defines everything required for standard DES algorithm.
 */
 #include <string>
 #include <vector>

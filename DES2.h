@@ -1,7 +1,7 @@
 /*
 Author: Levi Hutchins C3386116
 Course: COMP3260
-Desc:
+Desc: Header file for DES2. Defines everything required for the DES2 variation.
 */
 #include <string>
 #include <vector>
