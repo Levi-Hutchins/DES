@@ -1,3 +1,8 @@
+/*
+Author: Levi Hutchins C3386116
+Course: COMP3260
+Desc:
+*/
 #include <string>
 #include <vector>
 #ifndef DES0_H

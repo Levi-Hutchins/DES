@@ -1,3 +1,8 @@
+/*
+Author: Levi Hutchins C3386116
+Course: COMP3260
+Desc:
+*/
 #include "DES1.h"
 #include "SBoxes.h"
 #include "Permutations.h"
