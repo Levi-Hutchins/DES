@@ -8,8 +8,8 @@
 #include <bitset>
 using namespace std;
 
-DES0::DES0(){
-}
+DES0::DES0(): is_prime_key(false){}
+
 /**
  * @param key: Plaintext key from file
  * @return c0_d0: 28 bit split key c0_d0[0] and [1]

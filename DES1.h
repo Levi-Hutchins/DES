@@ -27,6 +27,7 @@ class DES1{
 
 
         string encrypt(const string &plaintext, const string& plaintext_PRIME, const string& key);
+        vector<string> encrypt_with_two_keys(const string& pt, const string& key, const string& key_prime);
 
         string decrypt(const string& ciphertext, const string& key);
 
@@ -46,9 +47,11 @@ class DES1{
     private:
         vector<int> bit_differences;
         vector<string> c0_d0;
+        vector<string> c0_d0_prime;
         vector<string> roundKeys;
-
+        vector<string> roundKeys_prime;
         string original_key;
+        bool is_prime_key = false;
 
 
 
