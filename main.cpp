@@ -117,11 +117,13 @@ void handle_outfile(const string* data){
     vector<string> ciphers0 = des0.encrypt_with_two_keys(data[0], data[2], data[3]);
     vector<string> ciphers1 = des1.encrypt_with_two_keys(data[0], data[2], data[3]);
     vector<string> ciphers2 = des2.encrypt_with_two_keys(data[0], data[2], data[3]);
+    vector<string> ciphers3 = des3.encrypt_with_two_keys(data[0], data[2], data[3]);
+
 
 
     outfile << "P under K and K`"<< endl;
-    outfile << "Ciphertext C:  " << ciphers2.at(0) << endl;
-    outfile << "Ciphertext C': " << ciphers2.at(1) << endl;
+    outfile << "Ciphertext C:  " << ciphers3.at(0) << endl;
+    outfile << "Ciphertext C': " << ciphers3.at(1) << endl;
 
 
     outfile << std::left;  // Align text to the left
@@ -138,7 +140,7 @@ void handle_outfile(const string* data){
                 << std::setw(15) << des0.get_bit_difference().at(i)
                 << std::setw(15) << des1.get_bit_difference().at(i)
                 << std::setw(15) << des2.get_bit_difference().at(i)
-                << std::setw(15) << "?" << endl;
+                << std::setw(15) << des3.get_bit_difference().at(i) << endl;
 
     }
 
