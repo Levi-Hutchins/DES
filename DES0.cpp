@@ -1,7 +1,7 @@
 /*
 Author: Levi Hutchins C3386116
 Course: COMP3260
-Desc:
+Desc: This file is the implementation of the DES0 variation. It is the original DES algorithm 
 */
 #include "DES0.h"
 #include "SBoxes.h"
